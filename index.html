@@ -83,6 +83,38 @@ img { display: block; max-width: 100%; }
 ::selection { background: var(--red); color: #0a0a0b; }
 
 /* ------------------------------------------------------------------ */
+/* Aurora — a slow living red glow behind everything                  */
+/* ------------------------------------------------------------------ */
+.aurora {
+  position: fixed;
+  inset: -25%;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(38% 38% at 28% 30%, rgba(225, 6, 0, 0.16), transparent 62%),
+    radial-gradient(44% 44% at 74% 66%, rgba(124, 2, 6, 0.18), transparent 62%);
+  filter: blur(24px);
+  opacity: 0.85;
+  animation: aurora-drift 24s ease-in-out infinite alternate;
+  will-change: transform;
+}
+@keyframes aurora-drift {
+  0%   { transform: translate(-3%, -2%) scale(1.05); }
+  50%  { transform: translate(3%, 3%) scale(1.16); }
+  100% { transform: translate(-2%, 2%) scale(1.08); }
+}
+
+/* ------------------------------------------------------------------ */
+/* Scroll reveal — blocks rise into view                              */
+/* ------------------------------------------------------------------ */
+.rise {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.85s var(--ease-out), transform 0.85s var(--ease-out);
+}
+.rise.in { opacity: 1; transform: none; }
+
+/* ------------------------------------------------------------------ */
 /* Grain + vignette                                                   */
 /* ------------------------------------------------------------------ */
 .grain {
@@ -820,11 +852,17 @@ img { display: block; max-width: 100%; }
   border: 1px solid var(--red);
   transition: transform 0.4s var(--ease-out), box-shadow 0.4s var(--ease-out), background 0.3s;
   box-shadow: 0 18px 52px -18px rgba(225, 6, 0, 0.8);
+  animation: join-pulse 2.8s ease-in-out infinite;
+}
+@keyframes join-pulse {
+  0%, 100% { box-shadow: 0 18px 52px -18px rgba(225, 6, 0, 0.7); }
+  50%      { box-shadow: 0 20px 66px -14px rgba(225, 6, 0, 1); }
 }
 .join-button:hover, .join-button:focus-visible {
   transform: translateY(-3px);
   background: var(--red-bright);
   box-shadow: 0 26px 64px -18px rgba(225, 6, 0, 1);
+  animation: none;
 }
 .join-button:active { transform: translateY(0); }
 .join-wrap > p { margin: 20px 0 0; font-size: 10.5px; letter-spacing: 0.24em; color: var(--ink-dim); text-transform: uppercase; }
@@ -872,7 +910,19 @@ img { display: block; max-width: 100%; }
   box-shadow: 0 0 26px 7px rgba(225, 6, 0, 0.55);
   animation: sweep-down 0.6s var(--ease-sharp) forwards;
 }
+/* faint trailing second line */
+.sweep::after {
+  content: "";
+  position: absolute;
+  left: 0; right: 0;
+  top: -26px;
+  height: 1px;
+  background: rgba(225, 6, 0, 0.5);
+  box-shadow: 0 0 16px 4px rgba(225, 6, 0, 0.4);
+  animation: sweep-down-2 0.6s var(--ease-sharp) forwards;
+}
 @keyframes sweep-down { to { top: 100%; } }
+@keyframes sweep-down-2 { to { top: calc(100% + 22px); } }
 @keyframes sweep-band { to { transform: translateY(100%); } }
 
 /* ------------------------------------------------------------------ */
@@ -999,14 +1049,16 @@ body.bg-red .cta-button:focus-visible span:last-child { color: #7c0206; }
     transition-duration: 0.001ms !important;
     scroll-behavior: auto !important;
   }
-  .grain, .reticle, .scroll-note { animation: none; }
+  .grain, .reticle, .scroll-note, .aurora, .join-button { animation: none; }
+  .rise { opacity: 1; transform: none; }
   .archive-image img { animation: none; filter: grayscale(0.55) contrast(1.08) brightness(0.9); }
 }
 
 </style>
 </head>
 <body>
-  <!-- Film grain + vignette + a faint red spotlight sweep -->
+  <!-- Living red glow + film grain + vignette -->
+  <div class="aurora" aria-hidden="true"></div>
   <div class="grain" aria-hidden="true"></div>
   <div class="vignette" aria-hidden="true"></div>
 
@@ -1108,27 +1160,27 @@ body.bg-red .cta-button:focus-visible span:last-child { color: #7c0206; }
       </section>
 
       <section class="statement">
-        <p>20 YEARS.</p>
-        <p>A FEW QUESTIONABLE DECISIONS.</p>
-        <p class="statement__serif">Some of them with you.</p>
+        <p class="rise">20 YEARS.</p>
+        <p class="rise">A FEW QUESTIONABLE DECISIONS.</p>
+        <p class="statement__serif rise">Some of them with you.</p>
       </section>
 
       <section class="details" aria-labelledby="details-title">
-        <div class="details-heading"><span>THE BRIEFING</span><span>NO EXCUSES</span></div>
-        <h2 id="details-title">SAVE<br />THE<br /><em>NIGHT</em></h2>
+        <div class="details-heading rise"><span>THE BRIEFING</span><span>NO EXCUSES</span></div>
+        <h2 id="details-title" class="rise">SAVE<br />THE<br /><em>NIGHT</em></h2>
         <dl>
-          <div><dt>DATE</dt><dd data-slot="date"></dd></div>
-          <div><dt>TIME</dt><dd data-slot="time"></dd></div>
-          <div><dt>PLACE</dt><dd data-slot="place"><small data-slot="city"></small></dd></div>
-          <div><dt>FINALE</dt><dd data-slot="finale"></dd></div>
-          <div><dt>DRESS</dt><dd data-slot="dress"></dd></div>
+          <div class="rise"><dt>DATE</dt><dd data-slot="date"></dd></div>
+          <div class="rise"><dt>TIME</dt><dd data-slot="time"></dd></div>
+          <div class="rise"><dt>PLACE</dt><dd data-slot="place"><small data-slot="city"></small></dd></div>
+          <div class="rise"><dt>FINALE</dt><dd data-slot="finale"></dd></div>
+          <div class="rise"><dt>DRESS</dt><dd data-slot="dress"></dd></div>
         </dl>
       </section>
 
       <section class="finale">
-        <p class="finale__eyebrow">THE LAST YEAR STARTS HERE.</p>
-        <div class="finale__mark"><span>SHABANOV</span><strong>20<em>s</em></strong></div>
-        <div class="join-wrap">
+        <p class="finale__eyebrow rise">THE LAST YEAR STARTS HERE.</p>
+        <div class="finale__mark rise"><span>SHABANOV</span><strong>20<em>s</em></strong></div>
+        <div class="join-wrap rise">
           <a class="join-button" data-slot="join" target="_blank" rel="noopener noreferrer">
             <span>JOIN THE PARTY</span><span aria-hidden="true">↗</span>
           </a>
@@ -1783,6 +1835,23 @@ window.SHABANOV_CONFIG = {
 
     document.body.classList.remove("bg-red");
     render(node);
+    setupRiseObserver();   // reveal statement/details/finale on scroll
+  }
+
+  // Reveal elements with class "rise" as they scroll into view.
+  function setupRiseObserver() {
+    var els = app.querySelectorAll(".rise");
+    if (!els.length) return;
+    if (reduceMotion() || !("IntersectionObserver" in window)) {
+      els.forEach(function (el) { el.classList.add("in"); });
+      return;
+    }
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); }
+      });
+    }, { threshold: 0.16, rootMargin: "0px 0px -8% 0px" });
+    els.forEach(function (el) { io.observe(el); });
   }
 
   /* ---- Reset ------------------------------------------------------ */
