@@ -1215,7 +1215,7 @@ window.SHABANOV_CONFIG = {
 
     // Ссылка на Telegram НЕ попадает на страницу, пока гость не ввёл
     // верный код и не дошёл до финального экрана.
-    telegramUrl: "https://t.me/REPLACE_WITH_PRIVATE_CHAT",
+    telegramUrl: "https://t.me/+hYtofJyjgIxjMzVi",
 
     // Общий допуск, который показывается в личном деле у всех.
     clearance: "ТОП-10 · LEVEL 20",
@@ -1350,7 +1350,7 @@ window.SHABANOV_CONFIG = {
       firstName: "RUSLAN",
       displayName: "Руслан Федько",
       codename: "RFdt_",
-      note: "знает пол-Крыма и на нём вся Miranda Media.",
+      note: "знает пол-Крыма и гений IT.",
       intro: "Где Руслан — там всё под контролем.",
       mission: [
         { tag: "ГЛАВНОЕ", text: "Мясо для шашлыка — напиши мне." },
@@ -1623,6 +1623,7 @@ window.SHABANOV_CONFIG = {
     var nameEl = node.querySelector('[data-slot="first-name"]');
     nameEl.textContent = g.firstName;
     scrambleInto(nameEl, g.firstName, 720, 820);   // decrypt the name once visible
+    state._nameEl = nameEl;   // fitted to width after render (see below)
     var introEl = node.querySelector('[data-slot="intro"]');
     if (g.intro) introEl.textContent = g.intro;
     else introEl.remove();   // no greeting -> don't leave an empty gap
@@ -1637,6 +1638,22 @@ window.SHABANOV_CONFIG = {
     });
     document.body.classList.add("bg-red");   // hold the red after ACCESS GRANTED
     render(node);
+    fitToWidth(state._nameEl);   // shrink long names (e.g. BRONISLAV) so they never clip
+  }
+
+  // Shrink an element's font-size until its text fits its container width.
+  function fitToWidth(el) {
+    if (!el || !el.parentElement) return;
+    el.style.whiteSpace = "nowrap";
+    var max = el.parentElement.clientWidth;
+    var guard = 0;
+    while (el.scrollWidth > max && guard < 60) {
+      var cur = parseFloat(window.getComputedStyle(el).fontSize);
+      if (!cur || cur < 24) break;
+      el.style.fontSize = (cur * 0.95) + "px";
+      guard++;
+    }
+    el.style.whiteSpace = "";
   }
 
   /* ---- Phase: BOARD (detective route board) ----------------------- */
